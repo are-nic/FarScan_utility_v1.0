@@ -4,11 +4,8 @@ import os
 import datetime
 import time
 
-filename = datetime.date.today()                                  # получаем текущую дату
-created = False                                                   # флаг для проверки создания директории
 
-
-def create_dir():
+def create_dir(filename):
     # Функция создает директорию C:\LOG\год\месяц
     # % B - месяц,% Y - год
     path = r'C:\LOG\{year}\{month}'.format(
@@ -16,9 +13,11 @@ def create_dir():
             month=filename.strftime("%B")
         )
     os.makedirs(path)                                             # создаем директорию
+    print('directory was created')
 
 
 def change_log():
+    filename = datetime.date.today()  # получаем текущую дату
     '''Создаем экземляр класса приложения, подключаемся к уже запущенному FarScan через PID процесса'''
     app = Application().connect(process=344)
     '''Альтернаивное имя окна программы "FS4W_Manager_Class"'''
@@ -38,17 +37,20 @@ def change_log():
     )
     win_journal.Включить.click()                                    # кликает Включить в окне выбора пути лога
     win_journal.Да.click()
+    print('log was changed')
 
 
-schedule.every().day.at('00:01').do(change_log)                   # создание нового лог-файла каждый день в 00:01
+schedule.every().day.at('00:01').do(change_log)                     # создание нового лог-файла каждый день в 00:01
 
 # запуск программы
 while True:
+    log_name = datetime.date.today()
+    directory = r'C:\LOG\{year}\{month}'.format(
+        year=log_name.strftime("%Y"),
+        month=log_name.strftime("%B"),
+    )
     # если наступило 1 число месяца и директория не была создана
-    if filename.strftime("%d") == '1' and not created:
-        create_dir()                                                # создаем директорию
-        created = True                                              # флаг меняем на Тру, чтобы повторно не создать дир
-    if filename.strftime("%d") != '1':                              # если число месяца отличное от 1, меняем флаг
-        created = False
-    schedule.run_pending()                                          # запуск функции создания лога
-    time.sleep(1)                                                   # пауза 1 сек
+    if log_name.strftime("%d") == '01' and not os.path.exists(directory):
+        create_dir(log_name)  # создаем директорию
+    schedule.run_pending()  # запуск функции создания лога
+    time.sleep(1)  # пауза 1 сек
