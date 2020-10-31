@@ -1,0 +1,6 @@
+comtypes==1.1.7
+psutil==2.2.1
+pywin32==228
+pywinauto==0.6.8
+schedule==0.6.0
+six==1.15.0
