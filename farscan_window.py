@@ -121,7 +121,7 @@ if len(sys.argv) > 1:                                                       # е
         start_farscan()
         time.sleep(5)
 
-        connect_system()                                                    # подключаемся к РРЛ Quadralink
+        connect_system()                                                    # подключаемся к РРC Quadralink
         time.sleep(2)
 
         auto_survey()                                                       # включаем автоопрос
